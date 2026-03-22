@@ -1,5 +1,5 @@
-﻿//using FiapCloudGames.Users.Application.Interfaces.Messaging;
-using FiapCloudGames.Users.Domain.Entities;
+﻿using FiapCloudGames.Users.Domain.Entities;
+using FiapCloudGames.Users.Domain.Messaging.Sns;
 using FiapCloudGames.Users.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -19,7 +19,7 @@ public sealed class DataSeederHostedService(
         using IServiceScope scope = serviceProvider.CreateScope();
         AppDbContext context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-        //var userEventPublisher = scope.ServiceProvider.GetRequiredService<IUserEventPublisher>();
+        ISnsService sqsService = scope.ServiceProvider.GetRequiredService<ISnsService>();
 
         if (await context.Usuarios.AnyAsync(cancellationToken))
             return;
@@ -29,8 +29,8 @@ public sealed class DataSeederHostedService(
         await context.Usuarios.AddRangeAsync(usuarios, cancellationToken);
         await context.SaveChangesAsync(cancellationToken);
 
-        //foreach (var usuario in usuarios)
-        //    await userEventPublisher.PublishUserCreatedAsync(usuario.Id, usuario.Nome!, cancellationToken);
+        foreach (var usuario in usuarios)
+            await sqsService.PublishUserCreatedAsync(new() { UsuarioId = usuario.Id, Nome = usuario.Nome }, cancellationToken);
 
         logger.LogInformation("Dados iniciais populados com sucesso!");
     }

@@ -1,10 +1,12 @@
 ﻿using Asp.Versioning;
 using FiapCloudGames.Users.Api.AppServices.v1.Interfaces;
+using FiapCloudGames.Users.Api.Examples;
 using FiapCloudGames.Users.Application.Dtos;
 using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace FiapCloudGames.Users.Api.Controllers.v1;
 
@@ -97,6 +99,7 @@ public sealed class UsuariosController(IUsuarioAppService usuarioAppService, IVa
     [HttpPost]
     [ProducesResponseType(typeof(UsuarioDto), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [SwaggerRequestExample(typeof(UsuarioDto), typeof(CriarUsuarioRequestExample))]
     public async Task<ActionResult<UsuarioDto>> CreateAsync([FromBody] UsuarioDto usuarioDto, CancellationToken cancellationToken)
     {
         ValidationResult validationResult = await validator.ValidateAsync(usuarioDto, cancellationToken);

@@ -3,9 +3,11 @@
 namespace FiapCloudGames.Users.Application.Dtos;
 
 public record UsuarioDto(
-    Guid? Id,
     string? Nome,
     string? Email,
     string? Senha,
     ERole? Role = null
-);
+)
+{
+    public Guid? Id { get; init; }
+}

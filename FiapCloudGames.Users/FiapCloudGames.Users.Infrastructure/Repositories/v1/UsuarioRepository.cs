@@ -27,7 +27,8 @@ public sealed class UsuarioRepository(AppDbContext context) : IUsuarioRepository
         Usuario usuarioCriado = new(
             nome: usuario.Nome,
             email: usuario.Email,
-            senha: usuario.Senha
+            senha: usuario.Senha,
+            role: usuario.Role
         );
 
         await context.Usuarios.AddAsync(usuarioCriado, cancellationToken);

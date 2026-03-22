@@ -1,13 +1,14 @@
-﻿//using FiapCloudGames.Users.Application.Interfaces.Messaging;
-using FiapCloudGames.Users.Domain.Entities;
+﻿using FiapCloudGames.Users.Domain.Entities;
+using FiapCloudGames.Users.Domain.Messaging;
+using FiapCloudGames.Users.Domain.Messaging.Sns;
 using FiapCloudGames.Users.Domain.Repositories.v1;
 using FiapCloudGames.Users.Domain.Services.v1;
 
 namespace FiapCloudGames.Users.Application.Services.v1;
 
 public sealed class UsuarioService(
-    IUsuarioRepository usuarioRepository
-    /*IUserEventPublisher userEventPublisher*/) : IUsuarioService
+    IUsuarioRepository usuarioRepository,
+    ISnsService sqsService) : IUsuarioService
 {
     public async Task<IEnumerable<Usuario>> ObterUsuariosAsync(CancellationToken cancellationToken)
         => await usuarioRepository.ObterUsuariosAsync(cancellationToken);
@@ -21,8 +22,12 @@ public sealed class UsuarioService(
     public async Task<Usuario> CriarUsuarioAsync(Usuario usuario, CancellationToken cancellationToken)
     {
         Usuario usuarioCriado = await usuarioRepository.CriarUsuarioAsync(usuario, cancellationToken);
-
-        //await userEventPublisher.PublishUserCreatedAsync(usuarioCriado.Id, usuarioCriado.Nome!, cancellationToken);
+        
+        await sqsService.PublishUserCreatedAsync(new UserCreatedEvent()
+        {
+            UsuarioId = usuarioCriado.Id,
+            Nome = usuarioCriado.Nome,
+        }, cancellationToken);
 
         return usuarioCriado;
     }

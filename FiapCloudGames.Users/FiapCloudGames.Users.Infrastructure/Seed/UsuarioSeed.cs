@@ -7,8 +7,8 @@ namespace FiapCloudGames.Users.Infrastructure.Seed;
 public static class UsuarioSeed
 {
     public static IEnumerable<Usuario> GetUsuarios()
-        => new List<Usuario>()
-        {
+        =>
+        [
             new(
                 nome: "Admin",
                 email: "admin.fcg@gmail.com",
@@ -20,5 +20,5 @@ public static class UsuarioSeed
                 email: "eduardo.fcg@gmail.com",
                 senha: "Eduardo@1234"
             )
-        };
+        ];
 }

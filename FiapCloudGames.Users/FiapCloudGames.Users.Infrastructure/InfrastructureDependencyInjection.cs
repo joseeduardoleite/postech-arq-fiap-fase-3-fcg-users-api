@@ -1,8 +1,9 @@
-﻿using FiapCloudGames.Users.Application.Interfaces.Auth;
-//using FiapCloudGames.Users.Application.Interfaces.Messaging;
+﻿using Amazon.SimpleNotificationService;
+using FiapCloudGames.Users.Application.Interfaces.Auth;
+using FiapCloudGames.Users.Domain.Messaging.Sns;
 using FiapCloudGames.Users.Domain.Repositories.v1;
 using FiapCloudGames.Users.Infrastructure.Auth;
-//using FiapCloudGames.Users.Infrastructure.Messaging;
+using FiapCloudGames.Users.Infrastructure.Messaging.Sns;
 using FiapCloudGames.Users.Infrastructure.Repositories.v1;
 using FiapCloudGames.Users.Infrastructure.Seed;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -20,7 +21,8 @@ public static class InfrastructureDependencyInjection
     public static IServiceCollection AddInfraModule(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-        //services.AddScoped<IUserEventPublisher, UserEventPublisher>();
+        services.AddScoped<ISnsService, SnsService>();
+        services.AddScoped<IAmazonSimpleNotificationService, AmazonSimpleNotificationServiceClient>();
 
         services.AddHostedService<DataSeederHostedService>();
 

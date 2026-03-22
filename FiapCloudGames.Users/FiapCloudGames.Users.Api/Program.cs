@@ -9,7 +9,6 @@ using FiapCloudGames.Users.Application.Validators;
 using FiapCloudGames.Users.Infrastructure;
 using FiapCloudGames.Users.Infrastructure.Data;
 using FluentValidation;
-//using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -83,29 +82,9 @@ builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("UsersDb")));
-
-//builder.Services.AddMassTransit(x =>
-//{
-//    x.UsingRabbitMq((context, cfg) =>
-//    {
-//        cfg.Host(builder.Configuration["RabbitMQ:Host"], "/", h =>
-//        {
-//            h.Username(builder.Configuration["RabbitMQ:Username"]!);
-//            h.Password(builder.Configuration["RabbitMQ:Password"]!);
-//        });
-
-//        cfg.UseMessageRetry(r =>
-//        {
-//            r.Exponential(
-//                retryLimit: 5,
-//                minInterval: TimeSpan.FromSeconds(1),
-//                maxInterval: TimeSpan.FromSeconds(5),
-//                intervalDelta: TimeSpan.FromSeconds(1)
-//            );
-//        });
-//    });
-//});
+    options.UseMySql(builder.Configuration.GetConnectionString("UsersDb"),
+    ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("UsersDb")))
+);
 
 builder.Services.AddHealthChecks();
 
