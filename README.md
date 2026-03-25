@@ -2,8 +2,6 @@
 
 API construída em **.NET 8** para gerenciamento de usuários.
 
-**Obs**: Explicação de Infra em https://github.com/joseeduardoleite/fcg-orchestration
-
 ## 📦 Tecnologias & Ferramentas
 
 - .NET 8
